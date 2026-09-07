@@ -11,7 +11,7 @@
     <h1>Ferresasweb</h1>
     <nav>
         <a th:href="@{/dashboard}">Dashboard</a>
-        <a href="#">Clientes</a>
+        <a th:href="@{/view/usuarios}">Clientes</a>
         <a href="#">Productos</a>
         <a href="#">Facturas</a>
         <a th:href="@{/}">Salir</a>
@@ -48,7 +48,7 @@
         <h2>Acciones rápidas</h2>
         <p class="description" style="margin-bottom: 20px;">Comienza a gestionar tu información de forma ágil.</p>
         <div class="toolbar" style="margin-bottom: 0;">
-            <a href="#" class="btn btn-primary">+ Registrar cliente</a>
+            <a th:href="@{/view/usuarios}" class="btn btn-primary">+ Registrar cliente</a>
             <a href="#" class="btn btn-secondary">+ Agregar producto</a>
             <a href="#" class="btn btn-terciary" style="color: white;">+ Crear factura</a>
         </div>

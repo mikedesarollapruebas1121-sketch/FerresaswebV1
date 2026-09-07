@@ -7,46 +7,52 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<!-- Barra superior y navegación -->
-<header class="topbar">
-    <div><h1>Ferresasweb</h1><p>Sistema de gestión para ferretería</p></div>
-    <nav>
-        <a th:href="@{/view/usuarios}">Usuarios</a>
-        <a th:href="@{/view/usuarios/form}">+ Registrar</a>
-        <a th:href="@{/}">Salir</a>
-    </nav>
-</header>
+<!-- Llamamos al menú compartido -->
+<div th:replace="fragments/navbar :: nav"></div>
 
-<!-- Contenido de usuarios -->
 <main class="container">
     <section class="card">
-        <div class="section-header">
-            <div><h2>Usuarios</h2><p>Consulta, registra, modifica o elimina usuarios del sistema.</p></div>
-            <a th:href="@{/view/usuarios/form}" class="btn btn-primary">+ Registrar usuario</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h2>Usuarios</h2>
+                <p class="description">Consulta, registra, modifica o elimina usuarios del sistema.</p>
+            </div>
+            <!-- El botón redirige al formulario de creación -->
+            <a th:href="@{/view/usuarios/nuevo}" class="btn btn-primary">+ Registrar usuario</a>
         </div>
-        <!-- Tabla de datos -->
-        <div class="table-container">
-            <table id="tablaUsuarios">
-                <thead><tr><th>Acciones</th><th>ID</th><th>Documento</th><th>Nombre</th><th>Apellido</th><th>Correo</th><th>Teléfono</th><th>Rol</th></tr></thead>
-                <tbody>
-                <tr th:each="usuario : ${usuarios}">
-                    <td class="table-actions">
-                        <a class="btn btn-secondary btn-small" th:href="@{/view/usuarios/update/{id}(id=${usuario.id_usuario})}">Editar</a>
-                        <form th:action="@{/view/usuarios/delete/{id}(id=${usuario.id_usuario})}" method="post" onsubmit="return confirmarEliminacion();"><button type="submit" class="btn btn-danger btn-small">Eliminar</button></form>
-                    </td>
-                    <td th:text="${usuario.id_usuario}"></td><td th:text="${usuario.documento}"></td><td th:text="${usuario.nombre}"></td><td th:text="${usuario.apellido}"></td><td th:text="${usuario.correo}"></td><td th:text="${usuario.telefono}"></td><td th:text="${usuario.rol}"></td>
+
+        <div style="overflow-x: auto;">
+            <table class="table" id="tablaUsuarios" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <th style="padding: 12px; text-align: left;">Acciones</th>
+                    <th style="padding: 12px; text-align: left;">ID</th>
+                    <th style="padding: 12px; text-align: left;">Documento</th>
+                    <th style="padding: 12px; text-align: left;">Nombre</th>
+                    <th style="padding: 12px; text-align: left;">Apellido</th>
+                    <th style="padding: 12px; text-align: left;">Correo</th>
+                    <th style="padding: 12px; text-align: left;">Teléfono</th>
                 </tr>
-                <tr th:if="${usuarios == null or #lists.isEmpty(usuarios)}">
-                    <td colspan="8" class="empty-table"><strong>No hay usuarios registrados</strong><span>Registra el primer usuario para empezar a administrar Ferresasweb.</span><a th:href="@{/view/usuarios/form}" class="btn btn-primary">Registrar primer usuario</a></td>
+                </thead>
+                <tbody>
+                <!-- Ejemplo iterando con Thymeleaf desde tu controlador -->
+                <tr th:each="usuario : ${usuarios}" style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px;">
+                        <a th:href="@{/view/usuarios/editar/{id}(id=${usuario.id_usuario})}" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;">Editar</a>
+                        <a th:href="@{/view/usuarios/eliminar/{id}(id=${usuario.id_usuario})}" class="btn btn-terciary" style="padding: 4px 10px; font-size: 12px; color: #ef4444;">Eliminar</a>
+                    </td>
+                    <td style="padding: 12px;" th:text="${usuario.id_usuario}">1</td>
+                    <td style="padding: 12px;" th:text="${usuario.documento}">999999991</td>
+                    <td style="padding: 12px;" th:text="${usuario.nombre}">DAVID</td>
+                    <td style="padding: 12px;" th:text="${usuario.apellido}">PEREZ</td>
+                    <td style="padding: 12px;" th:text="${usuario.correo}">asd@gmail.com</td>
+                    <td style="padding: 12px;" th:text="${usuario.telefono}">1234562342</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <p class="table-total">Total de usuarios: <strong th:text="${usuarios != null ? #lists.size(usuarios) : 0}">0</strong></p>
+        <p style="margin-top: 15px; font-size: 14px; color: var(--muted);" th:text="'Total de usuarios: ' + ${#lists.size(usuarios)}">Total de usuarios: 1</p>
     </section>
 </main>
-<!-- Pie de página -->
-<footer class="app-footer">Ferresasweb · Sistema de gestión para ferretería <span th:text="${#dates.year(#dates.createNow())}"></span></footer>
-<script th:src="@{/js/main.js}"></script>
 </body>
 </html>

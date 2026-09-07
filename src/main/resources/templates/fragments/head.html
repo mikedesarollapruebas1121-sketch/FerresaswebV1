@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head-styles(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Ferresasweb</title>
+
+    <!-- Tailwind CSS (Cargado una sola vez para todo el sistema) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- CSS personalizado global o base (si aplica) -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+</body>
+</html>

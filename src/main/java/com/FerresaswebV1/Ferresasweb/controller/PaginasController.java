@@ -9,11 +9,11 @@ public class PaginasController {
 
     @GetMapping("/")
     public String login() {
-        return "login";
+        return "auth/login"; // Apunta a templates/auth/login.html
     }
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "dashboard";
+        return "dashboard/dashboard"; // Apunta a templates/dashboard/dashboard.html
     }
 }

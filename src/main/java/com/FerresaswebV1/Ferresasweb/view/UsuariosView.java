@@ -1,61 +1,53 @@
 package com.FerresaswebV1.Ferresasweb.view;
 
-
 import com.FerresaswebV1.Ferresasweb.model.Usuarios;
 import com.FerresaswebV1.Ferresasweb.repository.UsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class UsuariosView
-{
+@RequestMapping("/view/usuarios")
+public class UsuariosView {
+
     @Autowired
     private UsuariosRepository usuariosRepository;
 
-    @GetMapping("/view/usuarios")
-    public String lista(Model model)
-    {
+    // 1. Mostrar la lista de usuarios en una vista HTML
+    @GetMapping
+    public String listarUsuarios(Model model) {
         model.addAttribute("usuarios", usuariosRepository.findAll());
-        return "usuarios/list";
+        return "usuarios/list"; // Nombre de tu archivo HTML de listado (ajústalo si es diferente)
     }
 
-    @GetMapping("/view/usuarios/form")
-    public String form(Model model)
-    {
+    // 2. Mostrar el formulario para crear un nuevo usuario
+    @GetMapping("/nuevo")
+    public String nuevoUsuarioForm(Model model) {
         model.addAttribute("usuarios", new Usuarios());
-        return "usuarios/form";
+        return "usuarios/form"; // Nombre de tu archivo HTML de formulario
     }
 
-    //Creacion de datos
+    // 3. Mostrar el formulario para EDITAR un usuario (¡Aquí es donde se solucionaba tu 404!)
+    @GetMapping("/editar/{id}")
+    public String editarUsuarioForm(@PathVariable Long id, Model model) {
+        Usuarios usuario = usuariosRepository.findById(id).orElse(new Usuarios());
+        model.addAttribute("usuarios", usuario);
+        return "usuarios/form"; // Reutiliza el mismo form.html cargando los datos
+    }
 
-    @PostMapping("/view/usuarios/save")
-    public String save(@ModelAttribute Usuarios usuarios, RedirectAttributes ra)
-    {
+    // 4. Guardar o actualizar los datos que vienen del formulario
+    @PostMapping("/save")
+    public String save(@ModelAttribute Usuarios usuarios, RedirectAttributes redirectAttributes) {
         usuariosRepository.save(usuarios);
-        ra.addAttribute("message", "Usuario creado con exito");
-        return "redirect:/view/usuarios";
+        return "redirect:/view/usuarios"; // Redirige a la lista después de guardar
     }
 
-    @GetMapping("/view/usuarios/update/{id}")
-    public String update(@PathVariable Long id, Model model)
-    {
-        Usuarios usuarios = usuariosRepository.findById(id).orElse(null);
-        model.addAttribute("usuarios", usuarios);
-        return "usuarios/form";
-    }
-
-    @PostMapping("/view/usuarios/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes ra)
-    {
+    // 5. Eliminar un usuario
+    @GetMapping("/eliminar/{id}")
+    public String eliminarUsuario(@PathVariable Long id) {
         usuariosRepository.deleteById(id);
-        ra.addAttribute("message", "Usuario eliminado con exito");
         return "redirect:/view/usuarios";
     }
-
 }

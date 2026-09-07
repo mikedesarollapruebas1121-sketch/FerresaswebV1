@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function () {
 
     // 1. Lógica para el Login
@@ -51,3 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+// Función global para alternar la visibilidad de la contraseña
+function alternarContrasena() {
+    const input = document.getElementById('contrasena');
+    if (input) {
+        if (input.type === 'password') {
+            input.type = 'text';
+        } else {
+            input.type = 'password';
+        }
+    }
+}

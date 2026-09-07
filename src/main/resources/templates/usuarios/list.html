@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Gestión de Usuarios</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- CSS personalizado -->
+    <link rel="stylesheet"
+          th:href="@{/css/usuarios.css}">
+
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-800">
+
+<!-- Encabezado -->
+<header class="bg-slate-900 shadow-lg">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+
+        <div>
+            <h1 class="text-2xl font-bold text-white">
+                VortexBank
+            </h1>
+
+            <p class="mt-1 text-sm text-slate-300">
+                Software de administración y control bancaria.
+            </p>
+        </div>
+
+        <div class="hidden rounded-full bg-blue-500/20 px-4 py-2 text-sm font-medium text-blue-300 md:block">
+            Panel administrativo
+        </div>
+
+    </div>
+
+</header>
+
+<!-- Contenido principal -->
+<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- Mensaje de éxito -->
+    <div th:if="${success}"
+         class="mb-6 flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-5 py-4 shadow-sm">
+
+        <div class="flex items-center gap-3">
+
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="2"
+                     stroke="currentColor"
+                     class="h-6 w-6">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+
+                </svg>
+
+            </div>
+
+            <div>
+                <p class="font-semibold text-green-800">
+                    Operación realizada correctamente
+                </p>
+
+                <p class="text-sm text-green-700"
+                   th:text="${success}">
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Encabezado de la sección -->
+    <section class="mb-6 rounded-2xl bg-white p-6 shadow-sm">
+
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">
+                    Usuarios
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Consulta, registra, modifica o elimina usuarios del sistema.
+                </p>
+            </div>
+
+            <!-- Botón registrar -->
+            <a th:href="@{/view/usuarios/form}"
+               class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200">
+                ➕ Registrar
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- Tabla -->
+    <section class="overflow-hidden rounded-2xl bg-white shadow-sm">
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full divide-y divide-slate-200">
+
+                <thead class="bg-slate-800">
+
+                <tr>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        Acciones
+                    </th>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        ID Usuario
+                    </th>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        Documento
+                    </th>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        Nombre
+                    </th>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        Apellido
+                    </th>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        Correo
+                    </th>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        Teléfono
+                    </th>
+
+                    <th class="px-5 py-4 text-left text-xs font-bold uppercase tracking-wider text-white">
+                        Rol
+                    </th>
+
+                </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-100 bg-white">
+
+                <!-- Recorrer la lista de usuarios -->
+                <tr th:each="usuario : ${usuarios}"
+                    class="usuario-row transition duration-200 hover:bg-blue-50">
+
+                    <!-- Acciones -->
+                    <td class="whitespace-nowrap px-5 py-4">
+
+                        <div class="flex items-center gap-2">
+
+                            <!-- Editar -->
+                            <a th:href="@{/view/usuarios/update/{id}(id=${usuario.id_usuario})}"
+                               class="inline-flex items-center gap-1 rounded-lg bg-amber-100 px-3 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-200 focus:outline-none focus:ring-4 focus:ring-amber-100">
+                                ✏️
+                            </a>
+
+                            <!-- Eliminar -->
+                            <form th:action="@{/view/usuarios/delete/{id}(id=${usuario.id_usuario})}"
+                                  method="post"
+                                  onsubmit="return confirmarEliminacion();">
+
+                                <button type="submit"
+                                        class="inline-flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-200 focus:outline-none focus:ring-4 focus:ring-red-100">
+                                    🗑️
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                    <!-- ID -->
+                    <td class="whitespace-nowrap px-5 py-4 text-sm font-semibold text-slate-700"
+                        th:text="${usuario.id_usuario}">
+                    </td>
+
+                    <!-- Documento -->
+                    <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-600"
+                        th:text="${usuario.documento}">
+                    </td>
+
+                    <!-- Nombre -->
+                    <td class="whitespace-nowrap px-5 py-4">
+
+                        <div class="flex items-center gap-3">
+
+                            <!-- Avatar con inicial -->
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700"
+                                 th:text="${#strings.substring(usuario.nombre,0,1)}">
+                            </div>
+
+                            <span class="text-sm font-semibold text-slate-800"
+                                  th:text="${usuario.nombre}">
+                            </span>
+
+                        </div>
+
+                    </td>
+
+                    <!-- Apellido -->
+                    <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-600"
+                        th:text="${usuario.apellido}">
+                    </td>
+
+                    <!-- Correo -->
+                    <td class="px-5 py-4 text-sm text-slate-600">
+
+                        <a th:href="'mailto:' + ${usuario.correo}"
+                           th:text="${usuario.correo}"
+                           class="transition hover:text-blue-600 hover:underline">
+                        </a>
+
+                    </td>
+
+                    <!-- Teléfono -->
+                    <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-600"
+                        th:text="${usuario.telefono}">
+                    </td>
+
+                    <!-- Rol -->
+                    <td class="whitespace-nowrap px-5 py-4">
+
+                        <span class="inline-flex rounded-full bg-purple-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-purple-700"
+                              th:text="${usuario.rol}">
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <!-- Si no existen usuarios -->
+                <tr th:if="${usuarios == null or #lists.isEmpty(usuarios)}">
+
+                    <td colspan="8"
+                        class="px-6 py-16 text-center">
+
+                        <div class="mx-auto flex max-w-md flex-col items-center">
+
+                            <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke-width="1.5"
+                                     stroke="currentColor"
+                                     class="h-9 w-9">
+
+                                    <path stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.205-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197A5.971 5.971 0 0 0 6 18.719M15.75 6.75a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-15 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/>
+
+                                </svg>
+
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-800">
+                                No hay usuarios registrados
+                            </h3>
+
+                            <p class="mt-2 text-sm text-slate-500">
+                                Registra el primer usuario para comenzar a administrar el sistema.
+                            </p>
+
+                            <a th:href="@{/view/usuarios/form}"
+                               class="mt-5 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700">
+
+                                Registrar primer usuario
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Pie de tabla -->
+        <div class="border-t border-slate-200 bg-slate-50 px-6 py-4">
+
+            <p class="text-sm text-slate-500">
+
+                Total de usuarios:
+
+                <span class="font-bold text-slate-700"
+                      th:text="${usuarios != null ? #lists.size(usuarios) : 0}">
+                    0
+                </span>
+
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- Pie de página -->
+<footer class="mt-8 border-t border-slate-200 bg-white">
+
+    <div class="mx-auto max-w-7xl px-6 py-5 text-center text-sm text-slate-500">
+
+        Sistema de Gestión de Bancaria
+
+        <span th:text="${#dates.year(#dates.createNow())}">
+        </span>
+
+    </div>
+
+</footer>
+
+<!-- JS personalizado -->
+<script th:src="@{/js/script.js}"></script>
+
+</body>
+</html>
